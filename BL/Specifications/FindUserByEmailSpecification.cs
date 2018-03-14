@@ -5,18 +5,18 @@ using DAL.Contracts;
 
 namespace BL.Specifications
 {
-    public class FindUserByIdSpecification : ISpecification<User>
+    public class FindUserByEmailSpecification : ISpecification<User>
     {
-        private readonly Guid _id;
+        private string _email;
 
-        public FindUserByIdSpecification(Guid id)
+        public FindUserByEmailSpecification(string email)
         {
-            _id = id;
+            _email = email;
         }
 
         Expression<Func<User, bool>> ISpecification<User>.IsSpecifiedBy()
         {
-            return user => user.Id == _id;
+            return user => user.Email == _email;
         }
     }
 }

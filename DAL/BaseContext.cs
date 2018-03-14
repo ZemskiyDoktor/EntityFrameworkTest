@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using BLContracts;
-using BLContracts.Specifications;
+using DAL.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAL
@@ -17,14 +16,19 @@ namespace DAL
             return Set<T>();
         }
 
-        public T Provide<T>(ISpecification<T> specification) where T : class
+        public IQueryable<T> Provide<T>(ISpecification<T> specification) where T : class
         {
-            return Set<T>().FirstOrDefault(specification.IsSpecifiedBy());
+            return Set<T>().Where(specification.IsSpecifiedBy());
         }
 
         void IDbContext.Add<T>(T item)
         {
             Add(item);
+        }
+
+        public void Add<T>(IEnumerable<T> items) where T : class
+        {
+            throw new System.NotImplementedException();
         }
 
         void IDbContext.Remove<T, TId>(TId id)
@@ -41,7 +45,12 @@ namespace DAL
 
         void IDbContext.Update<T>(T item)
         {
-            Set<T>()
+            Set<T>();
+        }
+
+        public void Update<T>(IEnumerable<T> items) where T : class
+        {
+            throw new System.NotImplementedException();
         }
 
         public void Commit()

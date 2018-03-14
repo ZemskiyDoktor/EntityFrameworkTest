@@ -16,22 +16,22 @@ namespace BL.Tests
             config.AssertConfigurationIsValid();
         }
 
-        [Test]
-        public void TestGetAll()
-        {
-            var session = new DummySession();
-            var userService = new UserService(session);
+        //[Test]
+        //public void TestGetAll()
+        //{
+        //    var session = new DummySession();
+        //    var userService = new UserService(session);
 
-            var users = userService.All();
-        }
+        //    var users = userService.All();
+        //}
 
-        [Test]
-        public void TestFindById()
-        {
-            var session = new DummySession();
-            var userService = new UserService(session);
+        //[Test]
+        //public void TestFindById()
+        //{
+        //    var session = new DummySession();
+        //    var userService = new UserService(session);
 
-            var user = userService.FindUserById(2);
-        }
+        //    var user = userService.FindUserById(2);
+        //}
     }
 }
