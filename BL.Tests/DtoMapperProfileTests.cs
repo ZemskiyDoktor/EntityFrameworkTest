@@ -1,6 +1,15 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using System.Linq;
+using AutoFixture;
+using AutoFixture.NUnit3;
+using AutoMapper;
 using BL.Mapping;
 using BL.Specifications;
+using DAL;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Internal;
+using Moq;
 using NUnit.Framework;
 
 namespace BL.Tests
@@ -16,22 +25,18 @@ namespace BL.Tests
             config.AssertConfigurationIsValid();
         }
 
-        //[Test]
-        //public void TestGetAll()
-        //{
-        //    var session = new DummySession();
-        //    var userService = new UserService(session);
+        [Test, AutoEfMoqData]
+        public void TestGetAll([Frozen]Mock<DbSet<User>> users, [Frozen]Mock<LibraryContext> context, List<User> lusers)
+        {
+            var qusers = lusers.AsQueryable();
+            users.As<IQueryable<User>>().Setup(m => m.Provider).Returns(qusers.Provider);
+            users.As<IQueryable<User>>().Setup(m => m.Expression).Returns(qusers.Expression);
+            users.As<IQueryable<User>>().Setup(m => m.ElementType).Returns(qusers.ElementType);
+            users.As<IQueryable<User>>().Setup(m => m.GetEnumerator()).Returns(() => qusers.GetEnumerator());
 
-        //    var users = userService.All();
-        //}
+            context.Setup(c => c.Users).Returns(users.Object);
 
-        //[Test]
-        //public void TestFindById()
-        //{
-        //    var session = new DummySession();
-        //    var userService = new UserService(session);
-
-        //    var user = userService.FindUserById(2);
-        //}
+            var user = context.Object.Users.FirstOrDefault(x => x.Name == lusers[0].Name);
+        }
     }
 }
